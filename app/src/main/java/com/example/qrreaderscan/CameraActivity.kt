@@ -49,7 +49,7 @@ class CameraActivity : AppCompatActivity() {
 
         // creo la camara
         cameraSource = CameraSource.Builder(this, barcodeDetector)
-            .setRequestedPreviewSize(1600, 1024)
+            .setRequestedPreviewSize(320, 320)
             .setAutoFocusEnabled(true) //you should add this feature
             .build()
 
