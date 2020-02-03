@@ -59,16 +59,24 @@ class CameraActivity : AppCompatActivity() {
             override fun surfaceCreated(holder: SurfaceHolder) {
 
                 // verifico si el usuario dio los permisos para la camara
-                if (ActivityCompat.checkSelfPermission(this@CameraActivity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(
+                        this@CameraActivity,
+                        Manifest.permission.CAMERA
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         // verificamos la version de ANdroid que sea al menos la M para mostrar
                         // el dialog de la solicitud de la camara
                         if (shouldShowRequestPermissionRationale(
-                                Manifest.permission.CAMERA))
+                                Manifest.permission.CAMERA
+                            )
+                        )
                         ;
-                        requestPermissions(arrayOf(Manifest.permission.CAMERA),
-                            MY_PERMISSIONS_REQUEST_CAMERA)
+                        requestPermissions(
+                            arrayOf(Manifest.permission.CAMERA),
+                            MY_PERMISSIONS_REQUEST_CAMERA
+                        )
                     }
                     return
                 } else {
@@ -81,7 +89,13 @@ class CameraActivity : AppCompatActivity() {
                 }
             }
 
-            override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {}
+            override fun surfaceChanged(
+                holder: SurfaceHolder,
+                format: Int,
+                width: Int,
+                height: Int
+            ) {
+            }
 
             override fun surfaceDestroyed(holder: SurfaceHolder) {
                 cameraSource!!.stop()
@@ -103,54 +117,77 @@ class CameraActivity : AppCompatActivity() {
                     // verificamos que el token anterior no se igual al actual
                     // esto es util para evitar multiples llamadas empleando el mismo token
 
-                        val code = barcodes.valueAt(0)
-                        val type = barcodes.valueAt(0).valueFormat
+                    val code = barcodes.valueAt(0)
+                    val type = barcodes.valueAt(0).valueFormat
 
-                        //Log.i(LOG_TAG, type.toString() + " - " + Barcode.CONTACT_INFO)
+                    //Log.i(LOG_TAG, type.toString() + " - " + Barcode.CONTACT_INFO)
 
-                        when (type) {
-                            Barcode.CONTACT_INFO -> {
-                                //Log.i(LOG_TAG, code.contactInfo.name.first)
-                                //Log.i(LOG_TAG, code.contactInfo.name.last)
+                    when (type) {
+                        Barcode.CONTACT_INFO -> {
+                            //Log.i(LOG_TAG, code.contactInfo.name.first)
+                            //Log.i(LOG_TAG, code.contactInfo.name.last)
 
 
-                                for (index in 0 until code.contactInfo.phones.size) {
-                                    when (code.contactInfo.phones[index].type) {
-                                        Barcode.Phone.HOME -> Log.i(LOG_TAG, "HOME: " + code.contactInfo.phones[index].number)
-                                        Barcode.Phone.MOBILE -> Log.i(LOG_TAG, "MOBILE: " + code.contactInfo.phones[index].number)
-                                        Barcode.Phone.CONTENTS_FILE_DESCRIPTOR -> Log.i(LOG_TAG, "CONTENTS_FILE_DESCRIPTOR: " + code.contactInfo.phones[index].number)
-                                        Barcode.Phone.PARCELABLE_WRITE_RETURN_VALUE -> Log.i(LOG_TAG, "PARCELABLE_WRITE_RETURN_VALUE: " + code.contactInfo.phones[index].number)
-                                        Barcode.Phone.FAX -> Log.i(LOG_TAG, "FAX: " + code.contactInfo.phones[index].number)
-                                        Barcode.Phone.WORK -> Log.i(LOG_TAG, "WORK: " + code.contactInfo.phones[index].number)
-                                        Barcode.Phone.UNKNOWN -> Log.i(LOG_TAG, "UNKNOWN: " + code.contactInfo.phones[index].number)
-                                    }
-
+                            for (index in 0 until code.contactInfo.phones.size) {
+                                when (code.contactInfo.phones[index].type) {
+                                    Barcode.Phone.HOME -> Log.i(
+                                        LOG_TAG,
+                                        "HOME: " + code.contactInfo.phones[index].number
+                                    )
+                                    Barcode.Phone.MOBILE -> Log.i(
+                                        LOG_TAG,
+                                        "MOBILE: " + code.contactInfo.phones[index].number
+                                    )
+                                    Barcode.Phone.CONTENTS_FILE_DESCRIPTOR -> Log.i(
+                                        LOG_TAG,
+                                        "CONTENTS_FILE_DESCRIPTOR: " + code.contactInfo.phones[index].number
+                                    )
+                                    Barcode.Phone.PARCELABLE_WRITE_RETURN_VALUE -> Log.i(
+                                        LOG_TAG,
+                                        "PARCELABLE_WRITE_RETURN_VALUE: " + code.contactInfo.phones[index].number
+                                    )
+                                    Barcode.Phone.FAX -> Log.i(
+                                        LOG_TAG,
+                                        "FAX: " + code.contactInfo.phones[index].number
+                                    )
+                                    Barcode.Phone.WORK -> Log.i(
+                                        LOG_TAG,
+                                        "WORK: " + code.contactInfo.phones[index].number
+                                    )
+                                    Barcode.Phone.UNKNOWN -> Log.i(
+                                        LOG_TAG,
+                                        "UNKNOWN: " + code.contactInfo.phones[index].number
+                                    )
                                 }
 
-
-
-                                //Log.i(LOG_TAG, code.contactInfo.phones[0].number)
                             }
-                            Barcode.EMAIL -> Log.i(LOG_TAG, code.email.address)
-                            Barcode.ISBN -> Log.i(LOG_TAG, code.rawValue)
-                            Barcode.PHONE -> Log.i(LOG_TAG, code.phone.number)
-                            Barcode.PRODUCT -> Log.i(LOG_TAG, code.rawValue)
-                            Barcode.SMS -> Log.i(LOG_TAG, code.sms.message)
-                            Barcode.TEXT -> Log.i(LOG_TAG, code.rawValue)
-                            Barcode.URL -> Log.i(LOG_TAG, "url: " + code.url.url)
-                            Barcode.WIFI -> Log.i(LOG_TAG, code.wifi.ssid)
-                            Barcode.GEO -> Log.i(LOG_TAG, code.geoPoint.lat.toString() + ":" + code.geoPoint.lng)
-                            Barcode.CALENDAR_EVENT -> Log.i(LOG_TAG, code.calendarEvent.description)
-                            Barcode.DRIVER_LICENSE -> Log.i(LOG_TAG, code.driverLicense.licenseNumber)
-                            else -> Log.i(LOG_TAG, code.rawValue)
+
+
+                            //Log.i(LOG_TAG, code.contactInfo.phones[0].number)
                         }
+
+                        Barcode.EMAIL -> Log.i(LOG_TAG, code.email.address)
+                        Barcode.ISBN -> Log.i(LOG_TAG, code.rawValue)
+                        Barcode.PHONE -> Log.i(LOG_TAG, code.phone.number)
+                        Barcode.PRODUCT -> Log.i(LOG_TAG, code.rawValue)
+                        Barcode.SMS -> Log.i(LOG_TAG, code.sms.message)
+                        Barcode.TEXT -> Log.i(LOG_TAG, code.rawValue)
+                        Barcode.URL -> Log.i(LOG_TAG, "url: " + code.url.url)
+                        Barcode.WIFI -> Log.i(LOG_TAG, code.wifi.ssid)
+                        Barcode.GEO -> Log.i(
+                            LOG_TAG,
+                            code.geoPoint.lat.toString() + ":" + code.geoPoint.lng
+                        )
+                        Barcode.CALENDAR_EVENT -> Log.i(LOG_TAG, code.calendarEvent.description)
+                        Barcode.DRIVER_LICENSE -> Log.i(LOG_TAG, code.driverLicense.licenseNumber)
+                        else -> Log.i(LOG_TAG, code.rawValue)
+                    }
 
 
                     if (token != tokenanterior) {
 
                         // guardamos el ultimo token proceado
                         tokenanterior = token
-
                         val code = barcodes.valueAt(0)
 
                         textView2?.text = token
