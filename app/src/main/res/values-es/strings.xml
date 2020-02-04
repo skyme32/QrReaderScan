@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Qr Reader Scan</string>
+    <string name="action_settings">Configuración</string>
+    <string name="type_barcode">Tipo QR</string>
+    <string name="Barcode_Title">Titulo QR</string>
+    <string name="tvt_date">Texto de la fecha</string>
+</resources>

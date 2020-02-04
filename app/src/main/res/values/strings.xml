@@ -1,4 +1,7 @@
 <resources>
-    <string name="app_name">QrReaderScan</string>
+    <string name="app_name">Qr Reader Scan</string>
     <string name="action_settings">Settings</string>
+    <string name="Barcode_Title">Barcode_Title</string>
+    <string name="type_barcode">Type_barcode</string>
+    <string name="tvt_date">Textview date</string>
 </resources>
