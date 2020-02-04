@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         listRecycle?.layoutManager = LinearLayoutManager(this)
         //sortData(true)
 
-        codes.sort
+        //codes.sort
 
         // Implement onClick and OnLongClick to the Elements of the list
         var click = createAdapterOnclick()
