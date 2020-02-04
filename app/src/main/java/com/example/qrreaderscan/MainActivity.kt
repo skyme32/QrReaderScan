@@ -2,18 +2,17 @@ package com.example.qrreaderscan
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qrreaderscan.bean.Code
 import com.example.qrreaderscan.factory.AdapterCustom
 import com.example.qrreaderscan.listener.ClickListener
-
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -128,49 +127,16 @@ class MainActivity : AppCompatActivity() {
 
 
         codes.add(code1)
-        codes?.add(code2)
-        codes?.add(code3)
-        codes?.add(code4)
-        codes?.add(code3)
-        codes?.add(code4)
-        codes?.add(code2)
-        codes?.add(code1)
-        codes?.add(code4)
-        codes?.add(code3)
-        codes?.add(code2)
-        codes?.add(code4)
-        codes?.add(code3)
-        codes?.add(code2)
-        codes?.add(code1)
-        codes?.add(code1)
-        codes?.add(code2)
-        codes?.add(code3)
-        codes?.add(code4)
-        codes?.add(code3)
-        codes?.add(code4)
-        codes?.add(code2)
-        codes?.add(code1)
-        codes?.add(code4)
-        codes?.add(code3)
-        codes?.add(code2)
-        codes?.add(code4)
-        codes?.add(code3)
-        codes?.add(code2)
-        codes?.add(code1)
-        codes?.add(code1)
-        codes?.add(code2)
-        codes?.add(code3)
-        codes?.add(code4)
-        codes?.add(code3)
-        codes?.add(code4)
-        codes?.add(code2)
-        codes?.add(code1)
-        codes?.add(code4)
-        codes?.add(code3)
-        codes?.add(code2)
-        codes?.add(code4)
-        codes?.add(code3)
-        codes?.add(code2)
-        codes?.add(code1)
+        codes.add(code2)
+        codes.add(code3)
+        codes.add(code4)
+        codes.add(code3)
+        codes.add(code4)
+        codes.add(code1)
+        codes.add(code2)
+        codes.add(code3)
+        codes.add(code4)
+        codes.add(code3)
+        codes.add(code4)
     }
 }
