@@ -121,6 +121,7 @@ class MainActivity : AppCompatActivity() {
             orderDate = 20190103120112
             txtType = getString(R.string.type_event)
             type = 11
+            tables?.add(null.toString())
         }
 
         var code1 = Code().apply {

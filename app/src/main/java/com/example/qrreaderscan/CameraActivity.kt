@@ -1,16 +1,17 @@
 package com.example.qrreaderscan
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.example.qrreaderscan.bean.Code
+import com.example.qrreaderscan.ui.detail.Detail
 import com.google.android.gms.vision.CameraSource
 import com.google.android.gms.vision.Detector
 import com.google.android.gms.vision.barcode.Barcode
@@ -115,6 +116,7 @@ class CameraActivity : AppCompatActivity() {
                     val code = barcodes.valueAt(0)
                     addStringType(code)
                     //var codeAt = Code(code)
+                    //  Log.d("answer", codeAt.toString())
 
                     textView2?.text = code.displayValue
                     textView2?.apply {
@@ -125,6 +127,7 @@ class CameraActivity : AppCompatActivity() {
                             .setDuration(shortAnimationDuration.toLong())
                             .setListener(null)
                     }
+
 
 
                 }
@@ -142,13 +145,42 @@ class CameraActivity : AppCompatActivity() {
             type = code.valueFormat
         }
 
-
         when (code.valueFormat) {
             Barcode.WIFI -> {
                 codeAt.img = R.drawable.ic_wifi
+                codeAt.tables?.add(
+                    if (code.wifi.ssid.isNullOrEmpty()) {
+                        null.toString()
+                    } else {
+                        code.wifi.ssid
+                    }
+                )
+                codeAt.tables?.add(
+                    if (code.wifi.password.isNullOrEmpty()) {
+                        null.toString()
+                    } else {
+                        code.wifi.password
+                    }
+                )
+                codeAt.tables?.add(
+                    if (code.wifi.encryptionType.toString().isNullOrEmpty()) {
+                        null.toString()
+                    } else {
+                        code.wifi.ssid
+                    }
+                )
+
+
+                val intent = Intent(applicationContext, Detail::class.java)
+                intent.putExtra("TAG", codeAt.tables?.get(0))
+                startActivity(intent)
+
+
+
             }
             Barcode.CALENDAR_EVENT -> {
-                Log.d("answer", "CALENDAR_EVENT-" + code.displayValue)
+                //Log.d("answer", "Status" + code.calendarEvent.status)
+                //Log.d("answer", "CALENDAR_EVENT-" + code.calendarEvent.organizer)
             }
             Barcode.CONTACT_INFO -> {
 
