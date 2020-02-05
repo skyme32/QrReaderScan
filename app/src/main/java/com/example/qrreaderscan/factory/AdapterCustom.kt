@@ -34,6 +34,7 @@ class AdapterCustom(items: List<Code>, var listener: ClickListener) :
         holder.imageView?.setImageResource(item?.img!!)
         holder.date?.text = item?.date
         holder.title?.text = item?.title
+        holder.type?.text = item?.txtType
 
     }
 
@@ -43,19 +44,21 @@ class AdapterCustom(items: List<Code>, var listener: ClickListener) :
         var view = itemView
         var title: TextView? = null
         var date: TextView? = null
+        var type: TextView? = null
         var imageView: ImageView? = null
         var listener: ClickListener? = null
 
         init {
             this.title = view.findViewById(R.id.tvt_title)
             this.date = view.findViewById(R.id.tvt_date)
+            this.type = view.findViewById(R.id.tvt_type)
             this.imageView = view.findViewById(R.id.imageViewIcon)
             this.listener = listener
             view.setOnClickListener(this)
         }
 
         override fun onClick(v: View?) {
-            this.listener?.onClick(itemView!!, adapterPosition)
+            this.listener?.onClick(itemView, adapterPosition)
         }
     }
 }

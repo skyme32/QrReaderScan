@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.View
@@ -107,12 +108,13 @@ class CameraActivity : AppCompatActivity() {
             override fun release() {}
 
             override fun receiveDetections(detections: Detector.Detections<Barcode>) {
-                val barcodes = detections.getDetectedItems()
+                val barcodes = detections.detectedItems
 
                 if (barcodes.size() > 0) {
 
                     val code = barcodes.valueAt(0)
-                    var codeAt = Code(code)
+                    addStringType(code)
+                    //var codeAt = Code(code)
 
                     textView2?.text = code.displayValue
                     textView2?.apply {
@@ -128,6 +130,33 @@ class CameraActivity : AppCompatActivity() {
                 }
             }
         })
+
+    }
+
+    private fun addStringType(code: Barcode) {
+
+        var codeAt = Code()
+        codeAt.apply {
+            txtType = getString(R.string.type_wifi)
+            title = code.displayValue
+            type = code.valueFormat
+        }
+
+
+        when (code.valueFormat) {
+            Barcode.WIFI -> {
+                codeAt.img = R.drawable.ic_wifi
+            }
+            Barcode.CALENDAR_EVENT -> {
+                Log.d("answer", "CALENDAR_EVENT-" + code.displayValue)
+            }
+            Barcode.CONTACT_INFO -> {
+
+            }
+            else -> {
+
+            }
+        }
 
     }
 }

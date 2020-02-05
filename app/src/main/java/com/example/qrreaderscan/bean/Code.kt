@@ -1,13 +1,17 @@
 package com.example.qrreaderscan.bean
 
-import com.example.qrreaderscan.R
-import com.google.android.gms.vision.barcode.Barcode
+import java.io.Serializable
+import java.text.SimpleDateFormat
+import java.util.*
 
-class Code() {
+
+class Code() : Serializable {
 
     var title = ""
     var type = 0
+    var txtType = ""
     var date = ""
+    var orderDate: Long = 0
     var img = 0
     var flagDone = false
 
@@ -32,23 +36,24 @@ class Code() {
     var table19: String = ""
     var table20: String = ""
 
-    constructor(barcode: Barcode) : this() {
-        this.title = barcode.displayValue
-        this.type = barcode.valueFormat
-        getImgType(barcode.valueFormat)
+    constructor(title: String, type: Int) : this() {
+        this.title = title
+        this.type = type
     }
 
-    private fun getImgType(typeFormat: Int) {
-        return when (typeFormat) {
-            Barcode.WIFI -> this.img =
-                R.drawable.ic_wifi
-            Barcode.CALENDAR_EVENT -> this.img =
-                R.drawable.ic_event
-            Barcode.CONTACT_INFO -> this.img =
-                R.drawable.ic_account_circle
-            else -> this.img =
-                R.drawable.ic_unknown_late
-        }
+    init {
+        var date = Date();
+        val formatter = SimpleDateFormat("MMM dd")
+        val formatterInt = SimpleDateFormat("yyyyMMddHmss")
+        this.date = formatter.format(date).capitalize()
+        this.orderDate = formatterInt.format(date).toLong()
+
+        //Log.d("answer", this.date  + " - " + orderDate.toString())
     }
+
+    override fun toString(): String {
+        return "Code(title='$title', orderDate=$orderDate)"
+    }
+
 
 }

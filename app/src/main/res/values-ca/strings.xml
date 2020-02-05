@@ -4,5 +4,10 @@
     <string name="action_settings">Configuració</string>
     <string name="Barcode_Title">Titol QR</string>
     <string name="type_barcode">Tipus QR</string>
-    <string name="tvt_date">Text de la data</string>
+    <string name="tvt_date">data</string>
+    <string name="tvt_type">tipus</string>
+    <string name="type_wifi">Wifi</string>
+    <string name="type_contact">Contacte</string>
+    <string name="type_event">Esdeveniment</string>
+    <string name="type_unknown">Desconegut</string>
 </resources>
