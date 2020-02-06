@@ -17,8 +17,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    var adapterCustom: AdapterCustom? = null
     var listRecycle: RecyclerView? = null
+    var adapterCustom: AdapterCustom? = null
 
 
     companion object {
@@ -31,7 +31,10 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         //Only for testing
-        texting()
+        if (codes.size == 0) {
+            texting()
+        }
+
 
         //
         listRecycle = findViewById(R.id.qrRecyclerList)
@@ -41,30 +44,8 @@ class MainActivity : AppCompatActivity() {
 
         // Implement onClick and OnLongClick to the Elements of the list
         var click = createAdapterOnclick()
-        adapterCustom = AdapterCustom(sortArraylist(codes), click)
+        adapterCustom = AdapterCustom(codes, click)
         listRecycle?.adapter = adapterCustom
-
-
-        /**
-        // Simulated the infoarmation
-        val swipeRefreshLayout = findViewById<SwipeRefreshLayout>(R.id.swiprefresh)
-        swipeRefreshLayout.setOnRefreshListener {
-
-        var code1 = Code().apply {
-        img = R.drawable.ic_wifi
-        title = "Asto_es_bueno"
-        date = "28/01/2020"
-        type = 9
-        }
-        codes.add(code1)
-        adapterCustom = AdapterCustom(sortArraylist(codes), click)
-        listRecycle?.adapter = adapterCustom
-
-
-        swipeRefreshLayout.isRefreshing = false
-        }
-         **/
-
 
 
         fab.setOnClickListener { view ->
@@ -72,6 +53,11 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        adapterCustom?.notifyDataSetChanged()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -91,14 +77,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun sortArraylist(list: ArrayList<Code>): List<Code> {
         return list.sortedByDescending { it.orderDate }
-
         //return list.sortedWith(compareBy { it.orderDate })
     }
 
-    private fun showSortDialog() {
-        //var options = {"Ascending", "Descending"}
-
-    }
 
     private fun createAdapterOnclick(): ClickListener {
         // Implement onclick to the Elements of the list, only one click
@@ -115,6 +96,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun texting() {
+        Log.d("Testing03", codes.toString())
+        codes.clear()
+
         var code2 = Code().apply {
             img = R.drawable.ic_event
             title = "Es tu dia"

@@ -1,142 +1,139 @@
 package com.example.qrreaderscan
 
-import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
+import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.view.SurfaceHolder
 import android.view.SurfaceView
-import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.example.qrreaderscan.bean.Code
 import com.example.qrreaderscan.ui.detail.Detail
 import com.google.android.gms.vision.CameraSource
 import com.google.android.gms.vision.Detector
 import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
-import kotlinx.android.synthetic.main.activity_camera.*
-import java.io.IOException
 
 
 class CameraActivity : AppCompatActivity() {
 
-    private var cameraSource: CameraSource? = null
-    private var cameraView: SurfaceView? = null
-    private val MY_PERMISSIONS_REQUEST_CAMERA = 1
-    private var token = ""
-    private var tokenanterior = ""
-    private val LOG_TAG = "Barcode Scanner API"
-    private var shortAnimationDuration: Int = 0
+    private val myPermissionsRequestCamera = 1
+    private lateinit var svBarcode: SurfaceView
+    private lateinit var detector: BarcodeDetector
+    private lateinit var cameraSource: CameraSource
+    private lateinit var code: Barcode
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera)
 
-        cameraView = findViewById<View>(R.id.camera_view) as SurfaceView?
-        initQR();
+        initQR2()
+
     }
 
 
-    fun initQR() {
+    private fun initQR2() {
 
-        // creo el detector qr
-        val barcodeDetector = BarcodeDetector.Builder(this)
-            .setBarcodeFormats(Barcode.DATA_MATRIX or Barcode.QR_CODE)
-            .build()
+        var taskHandler = Handler()
+        var runnable = Runnable {
+            cameraSource.stop()
 
-        // creo la camara
-        cameraSource = CameraSource.Builder(this, barcodeDetector)
-            //.setRequestedPreviewSize(320, 320)
-            .setAutoFocusEnabled(true) //you should add this feature
-            .setFacing(CameraSource.CAMERA_FACING_BACK)
-            .setRequestedPreviewSize(1600, 1024)
-            .setRequestedFps(15.0f)
-            .build()
 
-        // listener de ciclo de vida de la camara
-        cameraView!!.holder.addCallback(object : SurfaceHolder.Callback {
-            override fun surfaceCreated(holder: SurfaceHolder) {
+            addStringType()
 
-                // verifico si el usuario dio los permisos para la camara
-                if (ActivityCompat.checkSelfPermission(
-                        this@CameraActivity,
-                        Manifest.permission.CAMERA
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        // verificamos la version de ANdroid que sea al menos la M para mostrar
-                        // el dialog de la solicitud de la camara
-                        if (shouldShowRequestPermissionRationale(
-                                Manifest.permission.CAMERA
-                            )
-                        )
-                        ;
-                        requestPermissions(
-                            arrayOf(Manifest.permission.CAMERA),
-                            MY_PERMISSIONS_REQUEST_CAMERA
-                        )
-                    }
-                    return
-                } else {
-                    try {
-                        cameraSource!!.start(cameraView!!.holder)
-                    } catch (ie: IOException) {
-                        //Log.e("CAMERA SOURCE", ie.message)
-                    }
+            startActivity(intent)
+            taskHandler.removeCallbacksAndMessages(null)
+            finish()
+        }
 
+
+        svBarcode = findViewById(R.id.camera_view)
+
+        detector = BarcodeDetector.Builder(this).setBarcodeFormats(Barcode.ALL_FORMATS).build()
+        detector.setProcessor(object : Detector.Processor<Barcode> {
+
+            override fun release() {}
+
+            override fun receiveDetections(detect: Detector.Detections<Barcode>?) {
+                val barcodes = detect?.detectedItems
+                if (barcodes!!.size() > 0) {
+
+                    code = barcodes.valueAt(0)
+                    taskHandler.post(runnable)
                 }
+            }
+        })
+
+        cameraSource = CameraSource.Builder(this, detector).setRequestedPreviewSize(1024, 768)
+            .setRequestedFps(30f).setAutoFocusEnabled(true).build()
+
+        svBarcode.holder.addCallback(object : SurfaceHolder.Callback2 {
+            override fun surfaceRedrawNeeded(holder: SurfaceHolder?) {
             }
 
             override fun surfaceChanged(
-                holder: SurfaceHolder,
+                holder: SurfaceHolder?,
                 format: Int,
                 width: Int,
                 height: Int
             ) {
             }
 
-            override fun surfaceDestroyed(holder: SurfaceHolder) {
-                cameraSource!!.stop()
+            override fun surfaceDestroyed(holder: SurfaceHolder?) {
+                cameraSource.stop()
             }
-        })
 
-        // preparo el detector de QR
-        barcodeDetector.setProcessor(object : Detector.Processor<Barcode> {
-            override fun release() {}
-
-            override fun receiveDetections(detections: Detector.Detections<Barcode>) {
-                val barcodes = detections.detectedItems
-
-                if (barcodes.size() > 0) {
-
-                    val code = barcodes.valueAt(0)
-                    addStringType(code)
-                    //var codeAt = Code(code)
-                    //  Log.d("answer", codeAt.toString())
-
-                    textView2?.text = code.displayValue
-                    textView2?.apply {
-                        alpha = 0f
-                        visibility = View.VISIBLE
-                        animate()
-                            .alpha(1f)
-                            .setDuration(shortAnimationDuration.toLong())
-                            .setListener(null)
-                    }
-
-
-
+            override fun surfaceCreated(holder: SurfaceHolder?) {
+                if (ContextCompat.checkSelfPermission(
+                        this@CameraActivity,
+                        android.Manifest.permission.CAMERA
+                    ) == PackageManager.PERMISSION_GRANTED
+                ) {
+                    cameraSource.start(svBarcode.holder)
+                } else {
+                    ActivityCompat.requestPermissions(
+                        this@CameraActivity,
+                        arrayOf(android.Manifest.permission.CAMERA),
+                        myPermissionsRequestCamera
+                    )
                 }
             }
+
         })
 
     }
 
-    private fun addStringType(code: Barcode) {
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode == myPermissionsRequestCamera) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                cameraSource.start(svBarcode.holder)
+            else Toast.makeText(this, "scanner", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        detector.release()
+        cameraSource.stop()
+        cameraSource.release()
+    }
+
+
+    private fun addStringType() {
 
         var codeAt = Code()
         codeAt.apply {
@@ -170,13 +167,8 @@ class CameraActivity : AppCompatActivity() {
                     }
                 )
 
-
-                val intent = Intent(applicationContext, Detail::class.java)
-                intent.putExtra("TAG", codeAt.tables?.get(0))
-                startActivity(intent)
-
-
-
+                this.intent = Intent(applicationContext, Detail::class.java)
+                MainActivity.codes.add(codeAt)
             }
             Barcode.CALENDAR_EVENT -> {
                 //Log.d("answer", "Status" + code.calendarEvent.status)
@@ -185,9 +177,23 @@ class CameraActivity : AppCompatActivity() {
             Barcode.CONTACT_INFO -> {
 
             }
-            else -> {
+            Barcode.EMAIL -> {
+                val mailto = "mailto:" + code.email?.address +
+                        "&subject=" + Uri.encode(code.email?.subject) +
+                        "&body=" + Uri.encode(code.email?.body)
 
+                this.intent = Intent(Intent.ACTION_SENDTO)
+                this.intent.data = Uri.parse(mailto)
             }
+            Barcode.URL -> {
+                this.intent = Intent(Intent.ACTION_VIEW)
+                this.intent.data = Uri.parse(code.url?.url)
+            }
+            else -> {
+                this.intent = Intent(applicationContext, Detail::class.java)
+            }
+
+
         }
 
     }
